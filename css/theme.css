@@ -1,0 +1,104 @@
+/* ============================================================
+   Mercator — Design System (tema escuro, referência: print do
+   customizador — fundo azul-petróleo escuro, cards arredondados,
+   acento teal). 100% offline: só fontes do sistema.
+   ============================================================ */
+
+/* Tema CLEAN BLACK (identidade do YagGOD) — aprovado via preview */
+:root {
+  --bg: #000000;            /* fundo preto puro */
+  --surface: #0c0d0c;       /* cards / bottom sheet */
+  --surface2: #131513;      /* botões de categoria, campos */
+  --surface3: #1b1e1b;      /* hover / thumb do scroll */
+  --border: rgba(255,255,255,.07);
+  --border-strong: rgba(255,255,255,.16);
+  --accent: #02f67c;        /* verde da marca */
+  --accent-soft: rgba(2,246,124,.12);
+  --on-accent: #04170c;     /* texto sobre verde */
+  --blue: #02c3f6;          /* gemas / info */
+  --warn: #fbbf24;
+  --danger: #dd4b6c;        /* ações destrutivas (limpar histórico) */
+  --danger-soft: rgba(221,75,108,.12);
+  --text: #f2f5f3;
+  --muted: #8a938d;
+  --faint: #565e58;
+  --radius: 16px;
+  --radius-sm: 14px;
+  --font: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  --mono: 'Cascadia Code', Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+::selection { background: rgba(63,214,192,.3); }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 999px; }
+
+.hidden { display: none !important; }
+
+/* ===== Chips do topo (moedas/gemas — decorativos na fase 1) ===== */
+.chip-stat {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: .82rem;
+  color: var(--muted);
+}
+.chip-stat .val { font-family: var(--mono); font-weight: 700; color: var(--blue); }
+.chip-stat svg { display: block; }
+
+/* ===== Botões ===== */
+.btn-primary {
+  width: 100%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 1rem; font-weight: 700;
+  border-radius: var(--radius-sm);
+  padding: 15px;
+  box-shadow: 0 4px 0 rgba(0,0,0,.35);
+  transition: transform .08s ease, box-shadow .08s ease, filter .15s;
+}
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.35); }
+
+.btn-ghost {
+  color: var(--muted);
+  font-size: .85rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: color .15s, background .15s;
+}
+.btn-ghost:hover { color: var(--text); background: var(--surface2); }
+
+/* ===== Card genérico ===== */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* Acessibilidade: "Reduzir Movimento" (iOS) / "prefers-reduced-motion".
+   ATENÇÃO ao iteration-count: sem ele, uma animação `infinite` (o
+   headBob do mascote) não para — ela passa a durar .01ms e REPETIR
+   infinitamente, o que faz o elemento VIBRAR em vez de ficar parado. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

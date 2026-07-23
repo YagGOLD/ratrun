@@ -1,0 +1,5 @@
+# Mercator — em validação fechada.
+# O app continua público (quem tem o link entra), mas não deve ser
+# indexado por buscadores enquanto estiver nessa fase.
+User-agent: *
+Disallow: /

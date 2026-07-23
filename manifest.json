@@ -1,0 +1,15 @@
+{
+  "name": "RatRun",
+  "short_name": "RatRun",
+  "description": "Controle financeiro pessoal, simples e local. Saiba para onde vai o seu dinheiro.",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

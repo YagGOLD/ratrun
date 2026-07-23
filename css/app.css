@@ -1,0 +1,436 @@
+/* ============================================================
+   RatRun — estilos das telas financeiras + barra de abas
+   Herda o design system clean black de theme.css e o layout base
+   (#app, .screen, .stage, .sheet) de creator.css.
+   ============================================================ */
+
+/* Telas com aba: corpo rola; a barra fica fixa embaixo */
+.tab-screen { position: relative; }
+.tab-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  gap: 16px;
+  padding: 16px 18px calc(90px + env(safe-area-inset-bottom));
+  max-width: 460px; width: 100%;
+  margin: 0 auto;
+}
+
+/* ===== Seletor de mês ===== */
+.month-switch {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px;
+  padding: 14px 16px 4px;
+}
+.month-arrow {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--muted); font-size: 1.4rem; line-height: 1;
+  flex-shrink: 0;
+}
+.month-arrow:hover, .month-arrow:active { color: var(--text); border-color: var(--border-strong); }
+.month-current {
+  min-width: 168px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px; padding: 9px 20px;
+  color: var(--text); font-size: .98rem; font-weight: 600;
+  text-align: center;
+}
+.month-current:hover { border-color: var(--border-strong); }
+
+.tab-header-simple { padding: 18px 18px 4px; max-width: 460px; margin: 0 auto; width: 100%; }
+.tab-header-simple h2 { font-size: 1.15rem; }
+
+.tab-title-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.tab-title-row h2 { font-size: 1.15rem; }
+.tab-lead { color: var(--muted); font-size: .82rem; line-height: 1.5; margin-top: -6px; }
+
+/* ===== Hero (avatar + frase) ===== */
+.hero-card {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 22px; padding: 16px 18px;
+}
+.hero-avatar {
+  width: 84px; height: 84px; flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  animation: headBob 4s ease-in-out infinite;
+  box-shadow: 0 0 24px rgba(2,246,124,.14);
+}
+.hero-avatar canvas { width: 72px; image-rendering: pixelated; }
+.hero-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.hero-text strong { font-size: 1.02rem; line-height: 1.35; transition: opacity .25s ease; }
+.hero-text strong b { color: var(--accent); }
+.hero-sub { color: var(--muted); font-size: .78rem; }
+
+/* ===== Campo de salário / dinheiro ===== */
+.field-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.field-card label { color: var(--muted); font-size: .82rem; font-weight: 600; }
+.field-hint { color: var(--faint); font-size: .72rem; }
+.money-input {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 16px;
+}
+.money-input:focus-within { border-color: var(--accent); }
+.money-input .prefix { color: var(--muted); font-family: var(--mono); font-size: .95rem; }
+.money-input input {
+  flex: 1; min-width: 0;
+  background: transparent; border: none; outline: none;
+  color: var(--text); font-family: var(--mono); font-size: 1.15rem; font-weight: 700;
+  padding: 10px 0;
+  color-scheme: dark;
+}
+
+/* ===== Resultado do mês (Lucro / Prejuízo) ===== */
+.result-card {
+  border-radius: 22px; padding: 22px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  text-align: center;
+  border: 1px solid var(--border-strong);
+  transition: background .2s, border-color .2s;
+}
+.result-card.lucro {
+  background: linear-gradient(160deg, rgba(2,246,124,.14), rgba(2,246,124,.04));
+  border-color: rgba(2,246,124,.4);
+}
+.result-card.prejuizo {
+  background: linear-gradient(160deg, rgba(221,75,108,.14), rgba(221,75,108,.04));
+  border-color: rgba(221,75,108,.4);
+}
+.result-label {
+  font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted);
+}
+.result-card.lucro .result-label { color: var(--accent); }
+.result-card.prejuizo .result-label { color: var(--danger); }
+.result-value {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 2.6rem; font-weight: 700; line-height: 1.1;
+  color: var(--text);
+}
+.result-card.lucro .result-value { color: var(--accent); }
+.result-card.prejuizo .result-value { color: #f0839b; }
+.result-note { color: var(--muted); font-size: .76rem; margin-top: 2px; }
+
+/* ===== Detalhamento (tiles) ===== */
+.breakdown { display: flex; gap: 8px; }
+.bd-tile {
+  flex: 1;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 13px 10px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 7px;
+  text-align: left; color: var(--text);
+  transition: border-color .15s, background .15s;
+}
+.bd-tile:hover, .bd-tile:active { border-color: var(--border-strong); background: var(--surface2); }
+.bd-ico {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.bd-ico.green { background: rgba(2,246,124,.12); color: var(--accent); }
+.bd-ico.blue  { background: rgba(2,195,246,.14); color: var(--blue); }
+.bd-ico.red   { background: rgba(221,75,108,.12); color: #dd4b6c; }
+.bd-cap { color: var(--faint); font-size: .64rem; line-height: 1.2; }
+.bd-tile b { font-family: var(--mono); font-size: .92rem; }
+.bd-tile#bdSalary b { color: var(--accent); }
+.bd-tile#bdFixed b  { color: var(--blue); }
+.bd-tile#bdDaily b  { color: #f0839b; }
+
+/* ===== Seções e dados ===== */
+.tab-section { display: flex; flex-direction: column; gap: 10px; }
+.section-head { color: var(--text); font-size: .92rem; font-weight: 600; }
+.data-hint { color: var(--muted); font-size: .76rem; line-height: 1.55; }
+.data-hint b { color: var(--text); font-weight: 600; }
+.data-actions { display: flex; gap: 8px; }
+.data-actions .btn-ghost {
+  flex: 1;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 46px; border: 1px solid var(--border); color: var(--muted);
+  font-size: .84rem; font-weight: 600; border-radius: 999px;
+}
+.data-actions .btn-ghost:hover, .data-actions .btn-ghost:active {
+  color: var(--accent); border-color: rgba(2,246,124,.35); background: var(--accent-soft);
+}
+.mini-links { display: flex; gap: 8px; justify-content: center; }
+.mini-links .btn-ghost { font-size: .82rem; }
+
+/* ===== Entrada (fixas / gastos / objetivos) ===== */
+.entry-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.entry-card input {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 12px 16px;
+  font-size: 16px; outline: none; color: var(--text); color-scheme: dark;
+  min-height: 46px;
+}
+.entry-card input:focus { border-color: var(--accent); }
+.entry-money {
+  display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 0 16px;
+}
+.entry-money:focus-within { border-color: var(--accent); }
+.entry-money .prefix { color: var(--muted); font-family: var(--mono); }
+.entry-money input {
+  flex: 1; min-width: 0; background: transparent; border: none;
+  border-radius: 0; padding: 12px 0; font-family: var(--mono);
+}
+.entry-card .btn-primary.small { width: 100%; min-height: 48px; }
+.daily-line { display: flex; gap: 8px; }
+.daily-line .entry-money { flex: 1.4; }
+.daily-line input[type="date"] {
+  flex: 1; min-width: 0; text-align: center;
+  font-family: var(--mono); font-size: 14px;
+}
+
+/* ===== Linhas de itens (fixas, gastos, objetivos) ===== */
+.rows { display: flex; flex-direction: column; gap: 8px; }
+.row-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 11px 14px;
+}
+.row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.row-main strong { font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-main span { color: var(--faint); font-size: .72rem; }
+.row-main .tag {
+  display: inline-block; background: var(--surface3); color: var(--muted);
+  border-radius: 999px; padding: 1px 8px; font-size: .64rem; margin-right: 4px;
+}
+.row-value { font-family: var(--mono); font-size: .92rem; flex-shrink: 0; }
+.row-value.neg { color: #f0839b; }
+.row-del {
+  background: transparent; border: none; color: var(--faint);
+  width: 30px; height: 30px; border-radius: 50%; font-size: 1.1rem; flex-shrink: 0;
+}
+.row-del:hover, .row-del:active { color: var(--danger); background: var(--danger-soft); }
+.empty-hint { color: var(--faint); font-size: .8rem; padding: 14px 4px; text-align: center; }
+
+/* Grupo por dia nos gastos */
+.day-group { color: var(--faint); font-size: .7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em; padding: 8px 4px 2px; }
+
+/* ===== Barra de total ===== */
+.total-bar {
+  position: sticky; bottom: 0;
+  margin-top: 4px;
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: 16px; padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  color: var(--muted); font-size: .84rem; font-weight: 600;
+}
+.total-bar b {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  color: var(--accent); font-size: 1.35rem; font-weight: 700;
+}
+.btn-copy-prev {
+  border: 1px solid rgba(2,246,124,.3); color: var(--accent);
+  font-size: .74rem; font-weight: 600; padding: 8px 12px; white-space: nowrap;
+}
+.btn-copy-prev:hover, .btn-copy-prev:active { background: var(--accent-soft); }
+
+/* ===== Relatórios ===== */
+.report-empty {
+  text-align: center; color: var(--muted);
+  padding: 40px 16px; line-height: 1.6; font-size: .88rem;
+}
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.kpi {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.kpi span { color: var(--faint); font-size: .68rem; }
+.kpi b { font-family: var(--mono); font-size: 1.15rem; }
+.kpi.accent b { color: var(--accent); }
+.kpi.danger b { color: #f0839b; }
+.kpi.blue b { color: var(--blue); }
+.kpi.full { grid-column: 1 / -1; }
+
+.chart-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.chart-title { color: var(--text); font-size: .88rem; font-weight: 600; }
+.chart-sub { color: var(--faint); font-size: .72rem; margin-top: -8px; }
+
+/* Barras horizontais (categorias) */
+.hbar { display: flex; flex-direction: column; gap: 4px; }
+.hbar-label { display: flex; justify-content: space-between; font-size: .76rem; }
+.hbar-label span { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
+.hbar-label b { font-family: var(--mono); color: var(--text); }
+.hbar-track { height: 8px; background: var(--surface2); border-radius: 999px; overflow: hidden; }
+.hbar-fill { height: 100%; border-radius: 999px; background: var(--accent); }
+.hbar-fill.c1 { background: var(--accent); }
+.hbar-fill.c2 { background: var(--blue); }
+.hbar-fill.c3 { background: #8768e8; }
+.hbar-fill.c4 { background: var(--warn); }
+.hbar-fill.c5 { background: #f0839b; }
+
+/* Barras verticais (evolução) */
+.vbars { display: flex; align-items: flex-end; gap: 8px; height: 130px; padding-top: 6px; }
+.vbar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; min-width: 0; }
+.vbar-col { width: 70%; max-width: 26px; background: var(--surface2); border-radius: 6px 6px 0 0; position: relative; min-height: 3px; }
+.vbar-col.pos { background: linear-gradient(180deg, var(--accent), rgba(2,246,124,.4)); }
+.vbar-col.neg { background: linear-gradient(180deg, #f0839b, rgba(221,75,108,.4)); }
+.vbar-cap { color: var(--faint); font-size: .6rem; white-space: nowrap; }
+.vbar-val { color: var(--muted); font-family: var(--mono); font-size: .58rem; }
+
+/* ===== Objetivos ===== */
+.readiness {
+  background: var(--surface); border: 1px dashed var(--border-strong);
+  border-radius: 16px; padding: 14px 16px;
+  color: var(--muted); font-size: .82rem; line-height: 1.55;
+}
+.readiness b { color: var(--accent); }
+.goal-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.goal-top { display: flex; align-items: flex-start; gap: 10px; }
+.goal-top .goal-info { flex: 1; min-width: 0; }
+.goal-info strong { font-size: 1rem; display: block; }
+.goal-info span { color: var(--muted); font-family: var(--mono); font-size: .82rem; }
+.goal-estimate {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.est-line { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: .82rem; }
+.est-line span { color: var(--muted); }
+.est-line b { font-family: var(--mono); color: var(--text); }
+.est-line b.good { color: var(--accent); }
+.est-headline { color: var(--text); font-size: .86rem; line-height: 1.5; }
+.est-headline b { color: var(--accent); }
+.est-headline.warn b { color: var(--warn); }
+.cut-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.cut-title { color: var(--faint); font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; }
+.cut-item { font-size: .78rem; color: var(--muted); line-height: 1.45; }
+.cut-item b { color: var(--accent); font-family: var(--mono); }
+.goal-motiv { color: var(--muted); font-size: .78rem; font-style: italic; line-height: 1.5; }
+
+/* ===== Barra de abas fixa ===== */
+.tab-bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  max-width: 480px; margin: 0 auto;
+  display: flex; align-items: stretch;
+  background: rgba(10,11,10,.92);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 200;
+}
+.tab-btn {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 9px 2px 8px;
+  color: var(--faint); font-size: .6rem; font-weight: 600;
+  transition: color .15s;
+}
+.tab-btn svg { width: 22px; height: 22px; }
+.tab-btn.active { color: var(--accent); }
+.tab-btn:active { color: var(--text); }
+
+/* Overlay reaproveitado (importar) — herda .overlay/.copy-box do padrão */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.75);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 250; padding: 24px;
+  animation: toastIn .2s ease;
+}
+.copy-box {
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: var(--radius); padding: 20px;
+  width: 100%; max-width: 360px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.copy-box > strong { font-size: 1rem; }
+.copy-hint { color: var(--muted); font-size: .75rem; line-height: 1.5; }
+.copy-hint b { color: var(--text); font-weight: 600; }
+.danger-title { color: var(--danger); }
+.danger-note { color: var(--danger); font-weight: 600; }
+.confirm-actions { display: flex; gap: 8px; margin-top: 6px; }
+.confirm-actions > button { flex: 1; min-height: 46px; }
+.btn-danger-solid {
+  background: var(--danger); color: #fff; font-weight: 700; font-size: .9rem;
+  border-radius: 999px; padding: 12px 18px;
+}
+.btn-danger-solid:hover, .btn-danger-solid:active { filter: brightness(1.08); }
+.import-summary {
+  display: flex; flex-direction: column; gap: 6px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 12px;
+}
+.imp-line { display: flex; justify-content: space-between; gap: 10px; }
+.imp-line span { color: var(--muted); font-size: .74rem; }
+.imp-line b { font-family: var(--mono); font-size: .76rem; }
+
+/* Toast (herda de theme; garante posição) */
+#toasts {
+  position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%);
+  display: flex; flex-direction: column; gap: 8px; align-items: center;
+  z-index: 300; pointer-events: none; width: max-content; max-width: 90vw;
+}
+.toast {
+  background: var(--surface3); border: 1px solid var(--border-strong);
+  color: var(--text); border-radius: 999px; padding: 10px 18px;
+  font-size: .82rem; box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  transition: opacity .3s; animation: toastIn .2s ease;
+}
+.toast.ok { border-color: rgba(2,246,124,.4); }
+.toast.warn { border-color: rgba(251,191,36,.4); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* A tela de criador e a de doação não têm barra de abas: ocupam tudo */
+#screenCreator, #screenDonate { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ===== Tela de apoio (PIX) — portada do Mercator, no clean black ===== */
+.donate {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px; text-align: center;
+  padding: 28px 24px calc(28px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+.donate-intro { color: var(--muted); font-size: .95rem; }
+.donate-intro b { color: var(--accent); }
+.donate h1 { font-size: 1.25rem; margin-top: -6px; }
+.donate p { color: var(--muted); font-size: .9rem; max-width: 320px; line-height: 1.55; }
+.donate p b { color: var(--accent); }
+.pix-box {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  width: 100%; max-width: 300px;
+}
+.pix-box img { border-radius: 10px; background: #fff; padding: 8px; width: 180px; height: 180px; }
+.pix-box code {
+  font-family: var(--mono); font-size: .78rem; color: var(--muted);
+  word-break: break-all; max-width: 240px; text-align: center;
+}
+.pix-copy {
+  border: 1px solid rgba(2,246,124,.35); color: var(--accent);
+  font-weight: 600; min-height: 44px; padding: 10px 20px;
+  border-radius: 999px;
+}
+.pix-copy:hover, .pix-copy:active { background: var(--accent-soft); }
+.donate .btn-primary { max-width: 320px; }
