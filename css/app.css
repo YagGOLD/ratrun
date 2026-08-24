@@ -201,6 +201,27 @@
 /* ===== Linhas de itens (fixas, gastos, objetivos) ===== */
 .rows { display: flex; flex-direction: column; gap: 8px; }
 .rows:not(:empty) { padding-bottom: 4px; }
+
+/* Linha que abre para edição ao toque */
+.row-editable { cursor: pointer; }
+.row-editable:active { border-color: var(--border-strong); background: var(--surface2); }
+.row-editing {
+  flex-wrap: wrap; gap: 8px;
+  border-color: var(--accent); background: var(--surface2);
+}
+.row-editing .edit-name {
+  flex: 1 1 100%; min-width: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px; padding: 10px 14px;
+  /* 16px: abaixo disso o iOS dá zoom ao focar */
+  color: var(--text); font-size: 16px; outline: none;
+}
+.row-editing .edit-name:focus { border-color: var(--accent); }
+.row-editing .entry-money { flex: 1 1 130px; background: var(--surface); padding: 0 14px; }
+.row-editing .entry-money input { padding: 10px 0; font-size: 16px; }
+.edit-actions { display: flex; gap: 8px; flex: 1 1 auto; }
+.edit-actions button { flex: 1; min-height: 44px; border-radius: 999px; font-size: .84rem; }
+.edit-actions .btn-ghost { border: 1px solid var(--border); color: var(--muted); }
 .row-item {
   display: flex; align-items: center; gap: 10px;
   background: var(--surface); border: 1px solid var(--border);

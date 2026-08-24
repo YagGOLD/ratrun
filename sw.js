@@ -4,7 +4,7 @@
    incremente a versão do cache para forçar atualização.
    ============================================================ */
 
-var CACHE = "ratrun-v4";   // v4: barra de total sem sticky + zoom de toque duplo desligado
+var CACHE = "ratrun-v5";   // v5: editar nome e valor da fixa no lugar
 
 var FILES = [
   ".",

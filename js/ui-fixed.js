@@ -25,25 +25,19 @@ window.UIFixed = (function () {
   function renderList(key) {
     var m = Finance.getMonth(key);
     var box = $("fxList");
+    editando = null;
     box.innerHTML = "";
 
     if (!m.fixas.length) {
       box.innerHTML = '<div class="empty-hint">Nenhuma despesa fixa neste mês ainda.</div>';
     } else {
-      m.fixas.forEach(function (f) {
-        var row = document.createElement("div");
-        row.className = "row-item";
-        row.innerHTML =
-          '<div class="row-main"><strong>' + Util.esc(f.nome) + '</strong></div>' +
-          '<span class="row-value">' + Finance.fmt(f.valor) + '</span>';
-        var del = document.createElement("button");
-        del.className = "row-del"; del.textContent = "×"; del.title = "Excluir";
-        del.onclick = function () { Finance.removeFixa(key, f.id); renderList(key); };
-        row.appendChild(del);
-        box.appendChild(row);
-      });
+      m.fixas.forEach(function (f) { box.appendChild(rowView(key, f)); });
     }
+    renderTotals(key);
+  }
 
+  function renderTotals(key) {
+    var m = Finance.getMonth(key);
     var t = Finance.totals(key);
     $("fxTotal").textContent = Finance.fmt(t.fixasTotal);
     // Dizer quantas são responde de cara "cadastrei mais que isso?"
@@ -52,6 +46,139 @@ window.UIFixed = (function () {
     $("fxTotalLabel").textContent = m.fixas.length
       ? "Total de " + m.fixas.length + (m.fixas.length === 1 ? " despesa fixa" : " despesas fixas")
       : "Total de despesas fixas";
+  }
+
+  // ===== Editar uma despesa já cadastrada =====
+  // Uma fixa se repete todo mês, mas o nome sai errado e o valor muda
+  // (a luz de agosto não é a de setembro). Sem isto, corrigir exigia
+  // apagar e cadastrar de novo. Só o mês aberto é afetado.
+
+  var editando = null;    // { row, f, key } da linha em edição
+
+  function troca(antiga, nova) {
+    if (antiga && antiga.parentNode) antiga.parentNode.replaceChild(nova, antiga);
+  }
+
+  // Fecha a edição aberta sem salvar (uma de cada vez, para não deixar
+  // meia dúzia de linhas abertas e o usuário perdido)
+  function fecharEdicao() {
+    if (!editando) return;
+    var e = editando;
+    editando = null;
+    troca(e.row, rowView(e.key, e.f));
+  }
+
+  function rowView(key, f) {
+    var row = document.createElement("div");
+    row.className = "row-item row-editable";
+    row.setAttribute("role", "button");
+    row.setAttribute("tabindex", "0");
+    row.setAttribute("aria-label", "Editar " + f.nome);
+
+    var main = document.createElement("div");
+    main.className = "row-main";
+    var nome = document.createElement("strong");
+    nome.textContent = f.nome;
+    main.appendChild(nome);
+
+    var val = document.createElement("span");
+    val.className = "row-value";
+    val.textContent = Finance.fmt(f.valor);
+
+    var del = document.createElement("button");
+    del.className = "row-del"; del.textContent = "×"; del.title = "Excluir";
+    del.onclick = function (ev) {
+      ev.stopPropagation();          // o × exclui, não abre a edição
+      Finance.removeFixa(key, f.id);
+      renderList(key);
+    };
+
+    row.appendChild(main);
+    row.appendChild(val);
+    row.appendChild(del);
+
+    row.onclick = function () { abrirEdicao(key, f, row); };
+    row.onkeydown = function (ev) {
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); abrirEdicao(key, f, row); }
+    };
+    return row;
+  }
+
+  function abrirEdicao(key, f, row) {
+    fecharEdicao();
+    var editor = rowEdit(key, f);
+    troca(row, editor.row);
+    editando = { row: editor.row, f: f, key: key };
+    editor.focar();
+  }
+
+  function rowEdit(key, f) {
+    var row = document.createElement("div");
+    row.className = "row-item row-editing";
+
+    var nome = document.createElement("input");
+    nome.className = "edit-name";
+    nome.maxLength = 40;
+    nome.value = f.nome;
+    nome.placeholder = "Nome da despesa";
+    nome.setAttribute("aria-label", "Nome da despesa");
+
+    var money = document.createElement("div");
+    money.className = "entry-money";
+    var prefix = document.createElement("span");
+    prefix.className = "prefix";
+    prefix.textContent = "R$";
+    var valor = document.createElement("input");
+    valor.className = "edit-value";
+    valor.setAttribute("inputmode", "decimal");
+    valor.setAttribute("aria-label", "Valor da despesa");
+    valor.placeholder = "0,00";
+    valor.value = Util.moneyInputValue(f.valor);
+    money.appendChild(prefix);
+    money.appendChild(valor);
+
+    var acoes = document.createElement("div");
+    acoes.className = "edit-actions";
+    var cancelar = document.createElement("button");
+    cancelar.className = "btn-ghost";
+    cancelar.textContent = "Cancelar";
+    cancelar.onclick = function () { fecharEdicao(); };
+    var salvar = document.createElement("button");
+    salvar.className = "btn-primary small";
+    salvar.textContent = "Salvar";
+    salvar.onclick = function () { gravar(); };
+    acoes.appendChild(cancelar);
+    acoes.appendChild(salvar);
+
+    function gravar() {
+      var novoNome = nome.value.trim();
+      var novoValor = Util.parseMoney(valor.value);
+      if (!novoNome) { Toast.show("Dê um nome à despesa.", "warn"); nome.focus(); return; }
+      if (novoValor <= 0) { Toast.show("Informe um valor.", "warn"); valor.focus(); return; }
+
+      Finance.updateFixa(key, f.id, { nome: novoNome, valor: novoValor });
+      var atualizada = { id: f.id, nome: novoNome, valor: novoValor };
+      editando = null;
+      troca(row, rowView(key, atualizada));
+      renderTotals(key);
+      Toast.show("Despesa atualizada.", "ok");
+    }
+
+    function tecla(ev) {
+      if (ev.key === "Enter") { ev.preventDefault(); gravar(); }
+      else if (ev.key === "Escape") { ev.preventDefault(); fecharEdicao(); }
+    }
+    nome.addEventListener("keydown", tecla);
+    valor.addEventListener("keydown", tecla);
+
+    row.appendChild(nome);
+    row.appendChild(money);
+    row.appendChild(acoes);
+
+    return {
+      row: row,
+      focar: function () { nome.focus(); nome.select(); }
+    };
   }
 
   function add() {
