@@ -4,7 +4,7 @@
    incremente a versão do cache para forçar atualização.
    ============================================================ */
 
-var CACHE = "ratrun-v2";   // v2: cópia editável de fixas + projeção v2
+var CACHE = "ratrun-v3";   // v3: diálogo de cópia mais denso (lista rolável)
 
 var FILES = [
   ".",

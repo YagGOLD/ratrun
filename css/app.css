@@ -435,35 +435,38 @@
 .pix-copy:hover, .pix-copy:active { background: var(--accent-soft); }
 .donate .btn-primary { max-width: 320px; }
 /* ===== Copiar fixas do mês anterior (revisão antes de confirmar) ===== */
-#fxCopyOverlay .copy-box { max-height: 88vh; max-width: 380px; }
-.copy-toggle-all {
-  align-self: flex-start; font-size: .74rem; color: var(--accent);
-  padding: 4px 0; font-weight: 600;
+#fxCopyOverlay { padding: 16px; }
+/* A caixa cresce até quase a tela toda e a LISTA fica com a sobra,
+   em vez de um teto fixo que escondia metade das despesas. */
+#fxCopyOverlay .copy-box { max-height: 92vh; max-width: 400px; padding: 18px; }
+.copy-head-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
 }
+.copy-count { color: var(--faint); font-size: .72rem; white-space: nowrap; }
+.copy-toggle-all { font-size: .74rem; color: var(--accent); padding: 2px 0; font-weight: 600; }
 .copy-list {
-  display: flex; flex-direction: column; gap: 8px;
-  max-height: 44vh; overflow-y: auto; padding-right: 2px;
+  flex: 1 1 auto; min-height: 96px;
+  display: flex; flex-direction: column; gap: 6px;
+  overflow-y: auto; padding-right: 4px;
 }
 .copy-item {
-  display: flex; flex-direction: column; gap: 8px;
+  display: flex; align-items: center; gap: 8px;
   background: var(--surface2); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 10px 12px;
+  border-radius: var(--radius-sm); padding: 7px 9px;
 }
 .copy-item.off { opacity: .45; }
-.copy-head { display: flex; align-items: center; gap: 10px; }
 .copy-check { width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--accent); }
 .copy-name {
-  flex: 1; min-width: 0; background: transparent; border: none;
-  border-bottom: 1px solid var(--border); color: var(--text);
-  font-size: 16px; padding: 6px 2px; outline: none;
+  flex: 1 1 auto; min-width: 0;
+  background: transparent; border: none; border-bottom: 1px solid var(--border);
+  color: var(--text); font-size: 16px; padding: 5px 2px; outline: none;
 }
 .copy-name:focus { border-bottom-color: var(--accent); }
-.copy-line { display: flex; align-items: center; gap: 8px; }
-.copy-line .entry-money { padding: 0 12px; }
-.copy-line .entry-money input { padding: 8px 0; font-size: 15px; }
+.copy-item .entry-money { flex: 0 0 118px; padding: 0 10px; }
+.copy-item .entry-money input { padding: 6px 0; font-size: 16px; text-align: right; }
 .copy-dup {
   flex-shrink: 0; background: var(--surface3); color: var(--muted);
-  border-radius: 999px; padding: 3px 10px; font-size: .64rem;
+  border-radius: 999px; padding: 2px 7px; font-size: .6rem;
 }
 .copy-total {
   display: flex; justify-content: space-between; align-items: baseline;

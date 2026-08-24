@@ -187,11 +187,13 @@
       <div class="copy-box">
         <strong>Copiar fixas de <span id="fxCopyFrom"></span></strong>
         <span class="copy-hint">
-          Ajuste o nome e o valor de cada uma antes de confirmar. O mês de
-          origem <b>não muda</b>: isto cria despesas novas em
-          <b id="fxCopyTo"></b>.
+          Ajuste nome e valor antes de confirmar. O mês de origem
+          <b>não muda</b>: cria despesas novas em <b id="fxCopyTo"></b>.
         </span>
-        <button class="btn-ghost copy-toggle-all" id="fxCopyToggleAll">Desmarcar todas</button>
+        <div class="copy-head-row">
+          <span class="copy-count" id="fxCopyCount"></span>
+          <button class="btn-ghost copy-toggle-all" id="fxCopyToggleAll">Desmarcar todas</button>
+        </div>
         <div class="copy-list" id="fxCopyList"></div>
         <div class="copy-total">Total a copiar <b id="fxCopyTotal">R$ 0,00</b></div>
         <div class="confirm-actions">

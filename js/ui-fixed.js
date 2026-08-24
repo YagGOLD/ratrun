@@ -94,17 +94,18 @@ window.UIFixed = (function () {
     $("fxCopyOverlay").classList.remove("hidden");
   }
 
+  // Uma linha por despesa: marcar, nome e valor lado a lado. Com dez,
+  // quinze fixas, empilhar em duas linhas fazia caber só três na tela
+  // e dava a impressão de que faltavam itens.
   function copyRow(f, duplicada) {
     var row = document.createElement("div");
     row.className = "copy-item";
-
-    var head = document.createElement("label");
-    head.className = "copy-head";
 
     var chk = document.createElement("input");
     chk.type = "checkbox";
     chk.className = "copy-check";
     chk.checked = !duplicada;
+    chk.setAttribute("aria-label", "Copiar " + f.nome);
     chk.onchange = function () {
       row.classList.toggle("off", !chk.checked);
       updateCopyTotal();
@@ -114,10 +115,8 @@ window.UIFixed = (function () {
     nome.className = "copy-name";
     nome.maxLength = 40;
     nome.value = f.nome;
+    nome.title = f.nome;
     nome.placeholder = "Nome da despesa";
-
-    head.appendChild(chk);
-    head.appendChild(nome);
 
     var money = document.createElement("div");
     money.className = "entry-money";
@@ -127,25 +126,23 @@ window.UIFixed = (function () {
     var valor = document.createElement("input");
     valor.className = "copy-value";
     valor.setAttribute("inputmode", "decimal");
+    valor.setAttribute("aria-label", "Valor de " + f.nome);
     valor.placeholder = "0,00";
     valor.value = Util.moneyInputValue(f.valor);
     valor.oninput = updateCopyTotal;
     money.appendChild(prefix);
     money.appendChild(valor);
 
-    var line = document.createElement("div");
-    line.className = "copy-line";
-    line.appendChild(money);
+    row.appendChild(chk);
+    row.appendChild(nome);
     if (duplicada) {
       var tag = document.createElement("span");
       tag.className = "copy-dup";
       tag.textContent = "já existe";
-      line.appendChild(tag);
+      row.appendChild(tag);
+      row.classList.add("off");
     }
-
-    row.appendChild(head);
-    row.appendChild(line);
-    if (duplicada) row.classList.add("off");
+    row.appendChild(money);
     return row;
   }
 
@@ -166,14 +163,19 @@ window.UIFixed = (function () {
   }
 
   function updateCopyTotal() {
-    var itens = readCopyItems(true);
-    var total = itens.reduce(function (s, it) { return s + it.valor; }, 0);
+    var marcadas = readCopyItems(true);
+    var todas = readCopyItems(false);
+    var total = marcadas.reduce(function (s, it) { return s + it.valor; }, 0);
     $("fxCopyTotal").textContent = Finance.fmt(total);
-    $("fxCopyOk").textContent = itens.length
-      ? "Copiar " + itens.length + (itens.length === 1 ? " despesa" : " despesas")
+    $("fxCopyOk").textContent = marcadas.length
+      ? "Copiar " + marcadas.length + (marcadas.length === 1 ? " despesa" : " despesas")
       : "Copiar";
     $("fxCopyToggleAll").textContent =
-      itens.length === readCopyItems(false).length ? "Desmarcar todas" : "Marcar todas";
+      marcadas.length === todas.length ? "Desmarcar todas" : "Marcar todas";
+    // Diz quantas existem ao todo: com a lista rolando, o usuário
+    // precisa saber que há mais abaixo do que a tela mostra.
+    $("fxCopyCount").textContent = marcadas.length + " de " + todas.length +
+      (todas.length === 1 ? " marcada" : " marcadas");
   }
 
   function closeCopy() {
