@@ -160,7 +160,7 @@
 
     <div class="tab-body">
       <div class="tab-title-row">
-        <h2>Despesas fixas</h2>
+        <h2>Despesas fixas <span class="count-chip" id="fxCount"></span></h2>
         <button class="btn-ghost btn-copy-prev" id="fxCopyPrev" title="Copiar do mês anterior">Copiar do mês anterior</button>
       </div>
       <p class="tab-lead">Aluguel, internet, água, luz, telefone, assinaturas. Informe o nome e o valor.</p>
@@ -177,7 +177,8 @@
       <div class="rows" id="fxList"></div>
 
       <div class="total-bar">
-        Total de despesas fixas <b id="fxTotal">R$ 0,00</b>
+        <span id="fxTotalLabel">Total de despesas fixas</span>
+        <b id="fxTotal">R$ 0,00</b>
       </div>
     </div>
 
@@ -213,7 +214,7 @@
     </div>
 
     <div class="tab-body">
-      <div class="tab-title-row"><h2>Gastos cotidianos</h2></div>
+      <div class="tab-title-row"><h2>Gastos cotidianos <span class="count-chip" id="dyCount"></span></h2></div>
       <p class="tab-lead">Anote na hora: almoço, café, combustível, Uber. Rápido, para não esquecer.</p>
 
       <div class="entry-card daily-entry">
@@ -232,7 +233,8 @@
       <div class="rows" id="dyList"></div>
 
       <div class="total-bar">
-        Total de gastos no mês <b id="dyTotal">R$ 0,00</b>
+        <span id="dyTotalLabel">Total de gastos no mês</span>
+        <b id="dyTotal">R$ 0,00</b>
       </div>
     </div>
   </div>

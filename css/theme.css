@@ -30,6 +30,11 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
+html {
+  /* impede o navegador de reescalar o texto sozinho na horizontal */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 body {
   background: var(--bg);
   color: var(--text);
@@ -37,7 +42,17 @@ body {
   font-size: 15px;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
+  /* Mata o zoom de toque duplo: um toque fora do alvo, seguido de
+     outro, deixa de virar zoom. O pinça-para-ampliar continua
+     funcionando, que é acessibilidade e não se tira. */
+  touch-action: manipulation;
 }
+/* Sem seleção de texto (nem lupa do iOS) no que não é campo de texto */
+button, .tab-btn, .month-arrow, .month-current, .row-del,
+.cat-btn, .item-btn, .bd-tile, label {
+  -webkit-user-select: none; user-select: none;
+}
+input, textarea { -webkit-user-select: text; user-select: text; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 ::selection { background: rgba(63,214,192,.3); }
 

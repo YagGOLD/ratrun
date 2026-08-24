@@ -4,7 +4,7 @@
    incremente a versão do cache para forçar atualização.
    ============================================================ */
 
-var CACHE = "ratrun-v3";   // v3: diálogo de cópia mais denso (lista rolável)
+var CACHE = "ratrun-v4";   // v4: barra de total sem sticky + zoom de toque duplo desligado
 
 var FILES = [
   ".",

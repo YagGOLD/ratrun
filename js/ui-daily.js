@@ -45,6 +45,10 @@ window.UIDaily = (function () {
 
     var t = Finance.totals(key);
     $("dyTotal").textContent = Finance.fmt(t.gastosTotal);
+    $("dyCount").textContent = m.gastos.length || "";
+    $("dyTotalLabel").textContent = m.gastos.length
+      ? "Total de " + m.gastos.length + (m.gastos.length === 1 ? " gasto no mês" : " gastos no mês")
+      : "Total de gastos no mês";
   }
 
   function rowFor(key, g) {

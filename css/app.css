@@ -194,11 +194,13 @@
 .daily-line .entry-money { flex: 1.4; }
 .daily-line input[type="date"] {
   flex: 1; min-width: 0; text-align: center;
-  font-family: var(--mono); font-size: 14px;
+  /* 16px: abaixo disso o iOS dá zoom sozinho ao focar o campo */
+  font-family: var(--mono); font-size: 16px; padding-left: 8px; padding-right: 8px;
 }
 
 /* ===== Linhas de itens (fixas, gastos, objetivos) ===== */
 .rows { display: flex; flex-direction: column; gap: 8px; }
+.rows:not(:empty) { padding-bottom: 4px; }
 .row-item {
   display: flex; align-items: center; gap: 10px;
   background: var(--surface); border: 1px solid var(--border);
@@ -225,14 +227,29 @@
   text-transform: uppercase; letter-spacing: .05em; padding: 8px 4px 2px; }
 
 /* ===== Barra de total ===== */
+/* Barra de total no fim da lista, sem sticky.
+   Grudada no rodapé ela parava no meio da tela (o corpo tem 90px de
+   respiro por causa da barra de abas), cobria despesas e passava a
+   impressão de que a lista terminava ali. Quem quer saber quantas
+   são olha o contador no título da aba. */
 .total-bar {
-  position: sticky; bottom: 0;
   margin-top: 4px;
   background: var(--surface); border: 1px solid var(--border-strong);
   border-radius: 16px; padding: 14px 18px;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
   color: var(--muted); font-size: .84rem; font-weight: 600;
 }
+.total-bar span { min-width: 0; }
+
+/* Contador ao lado do título: diz de cara quantas existem, mesmo que
+   só parte delas caiba na tela. */
+.count-chip {
+  display: inline-block; vertical-align: middle;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--muted); font-size: .7rem; font-weight: 600;
+  border-radius: 999px; padding: 2px 9px; margin-left: 6px;
+}
+.count-chip:empty { display: none; }
 .total-bar b {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
   color: var(--accent); font-size: 1.35rem; font-weight: 700;
@@ -487,7 +504,7 @@
   width: 72px; text-align: center;
   background: var(--surface2); border: 1px solid var(--border);
   border-radius: 999px; padding: 8px 10px; min-height: 40px;
-  color: var(--text); font-family: var(--mono); font-size: 15px;
+  color: var(--text); font-family: var(--mono); font-size: 16px;
   outline: none; color-scheme: dark;
 }
 .goal-prazo input:focus { border-color: var(--accent); }

@@ -46,6 +46,12 @@ window.UIFixed = (function () {
 
     var t = Finance.totals(key);
     $("fxTotal").textContent = Finance.fmt(t.fixasTotal);
+    // Dizer quantas são responde de cara "cadastrei mais que isso?"
+    // quando a lista é longa e só parte dela cabe na tela.
+    $("fxCount").textContent = m.fixas.length || "";
+    $("fxTotalLabel").textContent = m.fixas.length
+      ? "Total de " + m.fixas.length + (m.fixas.length === 1 ? " despesa fixa" : " despesas fixas")
+      : "Total de despesas fixas";
   }
 
   function add() {
