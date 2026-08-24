@@ -180,6 +180,26 @@
         Total de despesas fixas <b id="fxTotal">R$ 0,00</b>
       </div>
     </div>
+
+    <!-- Copiar fixas: revisar nome e valor antes de confirmar. Uma fixa
+         se repete todo mês, mas nem sempre pelo mesmo valor. -->
+    <div class="overlay hidden" id="fxCopyOverlay">
+      <div class="copy-box">
+        <strong>Copiar fixas de <span id="fxCopyFrom"></span></strong>
+        <span class="copy-hint">
+          Ajuste o nome e o valor de cada uma antes de confirmar. O mês de
+          origem <b>não muda</b>: isto cria despesas novas em
+          <b id="fxCopyTo"></b>.
+        </span>
+        <button class="btn-ghost copy-toggle-all" id="fxCopyToggleAll">Desmarcar todas</button>
+        <div class="copy-list" id="fxCopyList"></div>
+        <div class="copy-total">Total a copiar <b id="fxCopyTotal">R$ 0,00</b></div>
+        <div class="confirm-actions">
+          <button class="btn-ghost" id="fxCopyCancel">Cancelar</button>
+          <button class="btn-primary small" id="fxCopyOk">Copiar</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ===================== ABA: Gastos cotidianos ===================== -->
@@ -239,6 +259,12 @@
         <div class="entry-money">
           <span class="prefix">R$</span>
           <input id="glValue" inputmode="decimal" placeholder="0,00">
+        </div>
+        <div class="goal-prazo">
+          <span>Quero alcançar em</span>
+          <input id="glPrazo" type="number" min="1" max="600" inputmode="numeric"
+                 placeholder="—" aria-label="Prazo desejado em meses">
+          <span>meses (opcional)</span>
         </div>
         <button class="btn-primary small" id="glAdd">+ Criar objetivo</button>
       </div>

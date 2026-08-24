@@ -2,6 +2,12 @@
    RatRun — Aba Despesas fixas
    Lista nome + valor, total automático, e um atalho para copiar as
    fixas do mês anterior (aluguel, internet e afins se repetem).
+
+   A cópia passa por uma revisão: uma despesa fixa se repete todo mês,
+   mas nem sempre pelo mesmo valor (a conta de luz de agosto não é a
+   de setembro). Antes de confirmar dá para escolher quais copiar e
+   corrigir nome e valor. O mês de origem nunca é tocado: cada item
+   confirmado vira uma despesa nova e independente no mês de destino.
    ============================================================ */
 
 window.UIFixed = (function () {
@@ -54,6 +60,146 @@ window.UIFixed = (function () {
     renderList(key);
   }
 
+  // ===== Cópia revisada do mês anterior =====
+
+  var copyKey = null;     // mês de destino da cópia em andamento
+
+  function norm(s) { return String(s || "").trim().toLowerCase(); }
+
+  function openCopy() {
+    var key = Finance.currentKey();
+    var origem = Finance.prev(key);
+    var fixas = Finance.getMonth(origem).fixas;
+
+    if (!fixas.length) {
+      Toast.show("O mês anterior não tem fixas para copiar.", "warn");
+      return;
+    }
+
+    copyKey = key;
+    $("fxCopyFrom").textContent = Finance.label(origem);
+    $("fxCopyTo").textContent = Finance.label(key);
+
+    // Já existe no destino? Vem desmarcada, para não duplicar sem querer.
+    var jaTem = {};
+    Finance.getMonth(key).fixas.forEach(function (f) { jaTem[norm(f.nome)] = true; });
+
+    var box = $("fxCopyList");
+    box.innerHTML = "";
+    fixas.forEach(function (f) {
+      box.appendChild(copyRow(f, !!jaTem[norm(f.nome)]));
+    });
+
+    updateCopyTotal();
+    $("fxCopyOverlay").classList.remove("hidden");
+  }
+
+  function copyRow(f, duplicada) {
+    var row = document.createElement("div");
+    row.className = "copy-item";
+
+    var head = document.createElement("label");
+    head.className = "copy-head";
+
+    var chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.className = "copy-check";
+    chk.checked = !duplicada;
+    chk.onchange = function () {
+      row.classList.toggle("off", !chk.checked);
+      updateCopyTotal();
+    };
+
+    var nome = document.createElement("input");
+    nome.className = "copy-name";
+    nome.maxLength = 40;
+    nome.value = f.nome;
+    nome.placeholder = "Nome da despesa";
+
+    head.appendChild(chk);
+    head.appendChild(nome);
+
+    var money = document.createElement("div");
+    money.className = "entry-money";
+    var prefix = document.createElement("span");
+    prefix.className = "prefix";
+    prefix.textContent = "R$";
+    var valor = document.createElement("input");
+    valor.className = "copy-value";
+    valor.setAttribute("inputmode", "decimal");
+    valor.placeholder = "0,00";
+    valor.value = Util.moneyInputValue(f.valor);
+    valor.oninput = updateCopyTotal;
+    money.appendChild(prefix);
+    money.appendChild(valor);
+
+    var line = document.createElement("div");
+    line.className = "copy-line";
+    line.appendChild(money);
+    if (duplicada) {
+      var tag = document.createElement("span");
+      tag.className = "copy-dup";
+      tag.textContent = "já existe";
+      line.appendChild(tag);
+    }
+
+    row.appendChild(head);
+    row.appendChild(line);
+    if (duplicada) row.classList.add("off");
+    return row;
+  }
+
+  // Lê o que está na tela agora (o usuário pode ter editado tudo)
+  function readCopyItems(onlyChecked) {
+    var out = [];
+    var rows = $("fxCopyList").querySelectorAll(".copy-item");
+    Array.prototype.forEach.call(rows, function (row) {
+      var chk = row.querySelector(".copy-check");
+      if (onlyChecked && !chk.checked) return;
+      out.push({
+        marcada: chk.checked,
+        nome: row.querySelector(".copy-name").value.trim(),
+        valor: Util.parseMoney(row.querySelector(".copy-value").value)
+      });
+    });
+    return out;
+  }
+
+  function updateCopyTotal() {
+    var itens = readCopyItems(true);
+    var total = itens.reduce(function (s, it) { return s + it.valor; }, 0);
+    $("fxCopyTotal").textContent = Finance.fmt(total);
+    $("fxCopyOk").textContent = itens.length
+      ? "Copiar " + itens.length + (itens.length === 1 ? " despesa" : " despesas")
+      : "Copiar";
+    $("fxCopyToggleAll").textContent =
+      itens.length === readCopyItems(false).length ? "Desmarcar todas" : "Marcar todas";
+  }
+
+  function closeCopy() {
+    $("fxCopyOverlay").classList.add("hidden");
+    $("fxCopyList").innerHTML = "";
+    copyKey = null;
+  }
+
+  function confirmCopy() {
+    var itens = readCopyItems(true);
+    if (!itens.length) { Toast.show("Marque ao menos uma despesa.", "warn"); return; }
+    if (itens.some(function (it) { return !it.nome; })) {
+      Toast.show("Toda despesa precisa de um nome.", "warn"); return;
+    }
+    if (itens.some(function (it) { return it.valor <= 0; })) {
+      Toast.show("Informe um valor para cada despesa marcada.", "warn"); return;
+    }
+
+    var key = copyKey || Finance.currentKey();
+    var n = Finance.addFixasBulk(key, itens);
+    closeCopy();
+    renderList(key);
+    Toast.show(n + (n === 1 ? " despesa copiada" : " despesas copiadas") +
+               " para " + Finance.label(key) + ".", "ok");
+  }
+
   function wire() {
     $("fxPrev").onclick = function () { Finance.setCurrent(Finance.prev(Finance.currentKey())); render(); };
     $("fxNext").onclick = function () { Finance.setCurrent(Finance.next(Finance.currentKey())); render(); };
@@ -63,18 +209,23 @@ window.UIFixed = (function () {
     $("fxValue").addEventListener("keydown", function (e) { if (e.key === "Enter") add(); });
     $("fxName").addEventListener("keydown", function (e) { if (e.key === "Enter") $("fxValue").focus(); });
 
-    $("fxCopyPrev").onclick = function () {
-      var key = Finance.currentKey();
-      var n = Finance.copyFixasFromPrev(key);
-      if (n === 0) {
-        var m = Finance.getMonth(key);
-        Toast.show(m.fixas.length ? "Este mês já tem fixas: apague antes de copiar."
-                                  : "O mês anterior não tem fixas para copiar.", "warn");
-        return;
-      }
-      renderList(key);
-      Toast.show(n + (n === 1 ? " despesa copiada" : " despesas copiadas") + " do mês anterior.", "ok");
+    $("fxCopyPrev").onclick = openCopy;
+    $("fxCopyCancel").onclick = closeCopy;
+    $("fxCopyOk").onclick = confirmCopy;
+    $("fxCopyToggleAll").onclick = function () {
+      var rows = $("fxCopyList").querySelectorAll(".copy-item");
+      var marcar = readCopyItems(true).length !== rows.length;
+      Array.prototype.forEach.call(rows, function (row) {
+        var chk = row.querySelector(".copy-check");
+        chk.checked = marcar;
+        row.classList.toggle("off", !marcar);
+      });
+      updateCopyTotal();
     };
+    // Toque fora da caixa fecha sem copiar
+    $("fxCopyOverlay").addEventListener("click", function (e) {
+      if (e.target === $("fxCopyOverlay")) closeCopy();
+    });
   }
 
   return { render: render };

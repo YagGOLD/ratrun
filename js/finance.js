@@ -129,6 +129,27 @@ window.Finance = (function () {
     return m;
   }
 
+  // Cria várias fixas de uma vez no mês. Usado pela cópia revisada do
+  // mês anterior: cada item vira uma despesa NOVA e independente (id
+  // próprio, sem vínculo com a de origem), então editar aqui nunca
+  // mexe no mês que serviu de modelo. Devolve quantas criou.
+  function addFixasBulk(key, items) {
+    if (!Array.isArray(items) || !items.length) return 0;
+    var m = getMonth(key);
+    var n = 0;
+    items.forEach(function (it) {
+      if (!it) return;
+      m.fixas.push({
+        id: uid(),
+        nome: String(it.nome || "").trim() || "Despesa",
+        valor: Math.max(0, Number(it.valor) || 0)
+      });
+      n++;
+    });
+    if (n) putMonth(key, m);
+    return n;
+  }
+
   // Copia as despesas fixas do mês anterior para o mês atual (aluguel,
   // internet e afins costumam se repetir). Só copia se o mês atual ainda
   // não tiver fixas, para não duplicar. Devolve quantas copiou.
@@ -303,7 +324,7 @@ window.Finance = (function () {
     getMonth: getMonth,
     setSalario: setSalario,
     addFixa: addFixa, updateFixa: updateFixa, removeFixa: removeFixa,
-    copyFixasFromPrev: copyFixasFromPrev,
+    addFixasBulk: addFixasBulk, copyFixasFromPrev: copyFixasFromPrev,
     addGasto: addGasto, updateGasto: updateGasto, removeGasto: removeGasto,
     totals: totals, hasData: hasData, monthsWithData: monthsWithData,
     categoryTotals: categoryTotals, biggestExpense: biggestExpense,
