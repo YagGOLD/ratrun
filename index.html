@@ -139,7 +139,7 @@
         <div class="import-summary" id="importSummary"></div>
         <span class="copy-hint">
           Isso <b>substitui</b> tudo o que está neste aparelho pelos dados
-          do arquivo: meses, salários, despesas, gastos, objetivos e avatar.
+          do arquivo: meses, salários, despesas, gastos, objetivos, reserva e avatar.
         </span>
         <span class="copy-hint danger-note">Os dados atuais deste aparelho serão perdidos.</span>
         <div class="confirm-actions">
@@ -258,11 +258,31 @@
     <div class="tab-body">
       <p class="tab-lead">Um carro, uma viagem, uma casa. Dê um nome e um valor, o RatRun projeta o caminho com seus próprios números.</p>
 
+      <!-- A reserva vem primeiro: o que vai para ela sai da conta dos
+           objetivos, e é isso que deixa a projeção honesta. -->
+      <div id="glReserve"></div>
+
       <div class="entry-card">
         <input id="glName" placeholder="Nome (ex.: Viagem para a praia)" maxlength="40">
         <div class="entry-money">
           <span class="prefix">R$</span>
           <input id="glValue" inputmode="decimal" placeholder="0,00">
+        </div>
+        <div class="mini-fields">
+          <label class="mini-field">
+            <span>Já reservado</span>
+            <div class="mini-money">
+              <span class="prefix">R$</span>
+              <input id="glSaved" inputmode="decimal" placeholder="0,00" aria-label="Valor já reservado">
+            </div>
+          </label>
+          <label class="mini-field">
+            <span>Destino por mês</span>
+            <div class="mini-money">
+              <span class="prefix">R$</span>
+              <input id="glAporte" inputmode="decimal" placeholder="0,00" aria-label="Valor destinado por mês">
+            </div>
+          </label>
         </div>
         <div class="goal-prazo">
           <span>Quero alcançar em</span>
@@ -320,6 +340,7 @@
 <script src="js/util.js"></script>
 <script src="js/finance.js"></script>
 <script src="js/goals.js"></script>
+<script src="js/reserve.js"></script>
 <script src="js/backup.js"></script>
 <script src="js/donation.js"></script>
 <script src="js/ui-creator.js"></script>

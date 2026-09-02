@@ -106,7 +106,8 @@ window.UIHome = (function () {
         '<div class="imp-line"><span>Feito em</span><b>' +
           (isNaN(quando) ? "—" : quando.toLocaleDateString("pt-BR")) + '</b></div>' +
         '<div class="imp-line"><span>Meses</span><b>' + s.meses + '</b></div>' +
-        '<div class="imp-line"><span>Objetivos</span><b>' + s.objetivos + '</b></div>';
+        '<div class="imp-line"><span>Objetivos</span><b>' + s.objetivos + '</b></div>' +
+        '<div class="imp-line"><span>Reserva</span><b>' + Finance.fmt(s.reserva) + '</b></div>';
       $("importOverlay").classList.remove("hidden");
     };
     reader.onerror = function () { Toast.show("Não consegui ler o arquivo.", "warn"); };

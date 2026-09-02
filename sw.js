@@ -4,7 +4,7 @@
    incremente a versão do cache para forçar atualização.
    ============================================================ */
 
-var CACHE = "ratrun-v5";   // v5: editar nome e valor da fixa no lugar
+var CACHE = "ratrun-v6";   // v6: reserva de emergência e reserva por objetivo
 
 var FILES = [
   ".",
@@ -25,6 +25,7 @@ var FILES = [
   "js/util.js",
   "js/finance.js",
   "js/goals.js",
+  "js/reserve.js",
   "js/backup.js",
   "js/donation.js",
   "js/ui-creator.js",

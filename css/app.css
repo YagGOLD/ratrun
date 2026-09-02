@@ -548,3 +548,92 @@
   color: var(--faint); font-size: .72rem; line-height: 1.45;
 }
 .est-note { border-left: 2px solid var(--border-strong); padding-left: 8px; }
+
+/* ===== Reserva de emergência e reserva por objetivo ===== */
+.reserve-card {
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: 18px; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+/* Completa muda de azul para verde: o colchão está feito. */
+.reserve-card.completa { border-color: rgba(2,246,124,.3); }
+.reserve-head { display: flex; align-items: flex-start; gap: 10px; }
+.reserve-title { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.reserve-title strong { font-size: 1rem; }
+.reserve-title span { color: var(--faint); font-size: .74rem; }
+.reserve-pill {
+  flex-shrink: 0; background: var(--surface2); border: 1px solid var(--border);
+  color: var(--blue); font-family: var(--mono); font-size: .78rem; font-weight: 700;
+  border-radius: 999px; padding: 5px 12px;
+}
+.reserve-pill.ok { color: var(--accent); border-color: rgba(2,246,124,.3); background: var(--accent-soft); }
+.reserve-nums { display: flex; align-items: baseline; gap: 8px; margin-top: -4px; }
+.reserve-nums b { font-family: var(--mono); font-size: 1.15rem; color: var(--text); }
+.reserve-nums span { color: var(--muted); font-size: .78rem; }
+.reserve-msg { color: var(--muted); font-size: .78rem; line-height: 1.5; }
+.reserve-msg b { color: var(--accent); font-family: var(--mono); }
+
+/* Barra de progresso (reserva e metas) — reaproveita a barra dos relatórios */
+.prog-track { height: 10px; }
+
+/* Dois campos de dinheiro lado a lado, compactos */
+.mini-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mini-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.mini-field > span { color: var(--muted); font-size: .72rem; font-weight: 600; }
+.mini-money {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0 12px; min-height: 44px;
+}
+.mini-money:focus-within { border-color: var(--accent); }
+.mini-money .prefix { color: var(--faint); font-size: .78rem; }
+.mini-money input {
+  flex: 1; min-width: 0; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--mono); font-size: 16px;
+}
+
+/* Meta da reserva: 3 / 6 / 12 meses de despesa, ou valor fixo à mão */
+.meta-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.meta-lab { color: var(--muted); font-size: .74rem; }
+.meta-chip {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--muted); font-size: .72rem; font-weight: 600;
+  border-radius: 999px; padding: 7px 12px;
+}
+.meta-chip.active {
+  background: var(--accent-soft); border-color: rgba(2,246,124,.35); color: var(--accent);
+}
+.meta-fixo { flex: 1; min-width: 108px; min-height: 38px; padding: 0 10px; }
+.meta-fixo input { font-size: 15px; }
+.meta-fixo.active { border-color: rgba(2,246,124,.35); }
+
+/* Registrar o aporte do mês em um clique */
+.btn-aporte {
+  align-self: stretch; text-align: center;
+  border: 1px solid rgba(2,246,124,.3); color: var(--accent);
+  font-size: .78rem; font-weight: 600; padding: 11px 14px; border-radius: 999px;
+}
+.btn-aporte:hover, .btn-aporte:active { background: var(--accent-soft); }
+.btn-aporte.done {
+  border-color: var(--border); color: var(--faint); cursor: default;
+}
+.btn-aporte.done:hover, .btn-aporte.done:active { background: none; }
+
+/* Para onde vai a sobra do mês */
+.split-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 16px; margin-top: 8px;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.split-note { color: var(--faint); font-size: .74rem; line-height: 1.45; }
+.split-note b { color: var(--accent); font-family: var(--mono); }
+.split-warn {
+  color: var(--muted); font-size: .74rem; line-height: 1.45;
+  border-left: 2px solid var(--warn); padding-left: 8px;
+}
+.split-warn b { color: var(--warn); font-family: var(--mono); }
+
+/* Legenda curta dentro da linha de estimativa ("sua sobra livre") */
+.est-sub {
+  display: block; color: var(--faint); font-size: .68rem; font-style: normal;
+}

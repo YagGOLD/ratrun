@@ -19,6 +19,7 @@ window.Backup = (function () {
     "ratrun.avatar",
     "ratrun.months",
     "ratrun.goals",
+    "ratrun.reserve",
     "ratrun.settings",
     "ratrun.donationSeen"
   ];
@@ -115,6 +116,7 @@ window.Backup = (function () {
     var d = obj.data;
     var months = d["ratrun.months"] || {};
     var goals = Array.isArray(d["ratrun.goals"]) ? d["ratrun.goals"] : [];
+    var reserve = d["ratrun.reserve"] || {};
 
     return {
       ok: true,
@@ -122,6 +124,7 @@ window.Backup = (function () {
       resumo: {
         meses: Object.keys(months).length,
         objetivos: goals.length,
+        reserva: Math.max(0, Number(reserve.saldo) || 0),
         data: obj.exportedAt
       }
     };
